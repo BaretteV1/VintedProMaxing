@@ -70,14 +70,16 @@ def passes_filters(item, watch: dict) -> bool:
 
     title = (getattr(item, "title", "") or "").lower()
 
-    for kw in watch.get("keywords_include", []):
+    include_kws = watch.get("keywords_include") or []
+    if not include_kws:
+        include_kws = [w for w in watch["params"].get("search_text", "").split() if len(w) > 2]
+    for kw in include_kws:
         if kw.lower() not in title:
             return False
 
     for kw in watch.get("keywords_exclude", []):
         if kw.lower() in title:
             return False
-
     min_fav = watch.get("min_favourites")
     if min_fav:
         fav_count = getattr(item, "favourite_count", None)
