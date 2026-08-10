@@ -16,6 +16,21 @@
       "keywords_exclude": [],
       "sort_by_popularity": true,
       "min_favourites": 0
+    },
+    {
+      "name": "Pokemon",
+      "params": {
+        "search_text": "Carte Pokemon",
+        "price_to": "5",
+        "currency": "EUR",
+        "order": "newest_first"
+      },
+      "min_price": 0,
+      "max_price": 5,
+      "keywords_include": [],
+      "keywords_exclude": [],
+      "sort_by_popularity": true,
+      "min_favourites": 0
     }
   ]
 }
