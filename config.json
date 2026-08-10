@@ -5,7 +5,7 @@
     {
       "name": "short venum",
       "params": {
-        "search_text": "short venue",
+        "search_text": "short venum",
         "price_to": "30",
         "currency": "EUR",
         "order": "newest_first"
