@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write  # nécessaire pour committer seen_ids.json
 
+concurrency:
+  group: vinted-watch
+  cancel-in-progress: false
+
 jobs:
   watch:
     runs-on: ubuntu-latest
