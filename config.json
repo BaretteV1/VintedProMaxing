@@ -46,6 +46,21 @@
       "keywords_exclude": [],
       "sort_by_popularity": true,
       "min_favourites": 0
+    },
+    {
+      "name": "nike vintage",
+      "params": {
+        "search_text": "nike vintage",
+        "price_to": "15",
+        "currency": "EUR",
+        "order": "newest_first"
+      },
+      "min_price": 0,
+      "max_price": 15,
+      "keywords_include": [],
+      "keywords_exclude": [],
+      "sort_by_popularity": true,
+      "min_favourites": 0
     }
   ]
 }
