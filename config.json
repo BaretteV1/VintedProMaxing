@@ -3,15 +3,15 @@
   "poll_interval_seconds": 420,
   "watches": [
     {
-      "name": "short venum",
+      "name": "Venum",
       "params": {
-        "search_text": "short venum",
-        "price_to": "30",
+        "search_text": "venum",
+        "price_to": "15",
         "currency": "EUR",
         "order": "newest_first"
       },
       "min_price": 0,
-      "max_price": 30,
+      "max_price": 15,
       "keywords_include": [],
       "keywords_exclude": [],
       "sort_by_popularity": true,
