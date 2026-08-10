@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Radar — config du bot Vinted</title>
+<style>
+  :root{
+    --bg: #0b0f14;
+    --panel: #131a22;
+    --panel-2: #182029;
+    --line: #26313d;
+    --text: #e7edf3;
+    --text-dim: #8fa1b3;
+    --accent: #ffb454;
+    --accent-dim: #8a6432;
+    --good: #6bd68f;
+    --bad: #ff7a7a;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body{
+    background: radial-gradient(1200px 800px at 80% -10%, #101823 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .mono{ font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+
+  header{
+    padding: 28px 20px 18px;
+    position: sticky; top:0; z-index: 5;
+    background: linear-gradient(var(--bg) 70%, transparent);
+  }
+  .eyebrow{
+    color: var(--accent);
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    display:flex; align-items:center; gap:8px;
+  }
+  .dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.3} }
+  h1{ margin: 6px 0 2px; font-size: 26px; letter-spacing: -0.01em; }
+  .sub{ color: var(--text-dim); font-size: 14px; margin:0; }
+
+  main{ max-width: 640px; margin: 0 auto; padding: 0 16px; }
+
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .card h2{ font-size: 13px; text-transform: uppercase; letter-spacing:.08em; color: var(--text-dim); margin: 0 0 14px; font-family: "SFMono-Regular", Consolas, monospace;}
+
+  label{ display:block; font-size: 13px; color: var(--text-dim); margin: 12px 0 6px; }
+  label:first-child{ margin-top:0; }
+  input[type=text], input[type=password], input[type=number]{
+    width:100%; background: var(--panel-2); border:1px solid var(--line); color: var(--text);
+    padding: 11px 12px; border-radius: 9px; font-size: 15px; outline:none;
+  }
+  input:focus{ border-color: var(--accent-dim); }
+  .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hint{ font-size: 12px; color: var(--text-dim); margin-top: 6px; line-height:1.5; }
+  .hint a{ color: var(--accent); }
+
+  .checkline{ display:flex; align-items:center; gap:10px; margin-top: 14px; }
+  .checkline input{ width:18px; height:18px; accent-color: var(--accent); }
+  .checkline span{ font-size: 14px; color: var(--text); }
+
+  button{
+    font: inherit; cursor:pointer; border:none; border-radius: 10px;
+    padding: 12px 16px; font-size: 14px; font-weight: 600;
+  }
+  .btn-primary{ background: var(--accent); color: #1a1305; width:100%; }
+  .btn-primary:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-ghost{ background: transparent; color: var(--text-dim); border:1px solid var(--line); }
+  .btn-danger{ background: transparent; color: var(--bad); border:1px solid #4a2222; }
+  .btn-row{ display:flex; gap:8px; margin-top: 14px; }
+
+  #setup{ }
+  #setup.hidden{ display:none; }
+  #app.hidden{ display:none; }
+
+  .watch{
+    background: var(--panel); border:1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px;
+  }
+  .watch-top{ display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; }
+  .watch-name{ font-size: 16px; font-weight: 600; }
+  .watch-meta{ font-size: 12.5px; color: var(--text-dim); margin-top: 4px; font-family: "SFMono-Regular", Consolas, monospace;}
+  .badge{ display:inline-block; background: var(--panel-2); border:1px solid var(--line); color: var(--accent); font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-right:6px; font-family: "SFMono-Regular", Consolas, monospace;}
+  .watch-actions{ display:flex; gap: 8px; }
+  .icon-btn{ background: var(--panel-2); border:1px solid var(--line); color: var(--text-dim); width:34px; height:34px; border-radius:9px; padding:0; }
+  .editor{ margin-top: 14px; padding-top:14px; border-top: 1px dashed var(--line); }
+
+  .empty{ text-align:center; padding: 40px 20px; color: var(--text-dim); }
+  .empty .big{ font-size: 34px; margin-bottom: 8px; }
+
+  #status{
+    position: fixed; left:0; right:0; bottom: 0; padding: 12px 16px; text-align:center;
+    font-size: 13px; transform: translateY(100%); transition: transform .25s ease;
+    font-family: "SFMono-Regular", Consolas, monospace;
+  }
+  #status.show{ transform: translateY(0); }
+  #status.ok{ background: #10321f; color: var(--good); }
+  #status.err{ background: #3a1414; color: var(--bad); }
+
+  .topbar{ display:flex; justify-content:space-between; align-items:center; margin: 18px 0 12px; }
+  .topbar h3{ margin:0; font-size: 14px; color: var(--text-dim); text-transform:uppercase; letter-spacing:.06em; font-family: "SFMono-Regular", Consolas, monospace;}
+  .add-btn{ background: var(--panel-2); border:1px dashed var(--accent-dim); color: var(--accent); font-size: 13px; padding: 8px 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow"><span class="dot"></span> radar actif — scan toutes les 10 min</div>
+  <h1>Config du bot Vinted</h1>
+  <p class="sub">Ajoute tes recherches, le bot GitHub scanne et t'alerte sur Telegram.</p>
+</header>
+
+<main>
+
+  <!-- Écran de connexion, affiché une seule fois -->
+  <section id="setup" class="card">
+    <h2>Connexion au dépôt GitHub</h2>
+    <label for="gh-owner">Nom d'utilisateur GitHub</label>
+    <input id="gh-owner" type="text" placeholder="ex : barette" />
+    <label for="gh-repo">Nom du dépôt</label>
+    <input id="gh-repo" type="text" placeholder="ex : vinted-bot" />
+    <label for="gh-token">Token GitHub</label>
+    <input id="gh-token" type="password" placeholder="ghp_..." />
+    <p class="hint">
+      Le token reste uniquement dans ton navigateur (jamais envoyé ailleurs qu'à GitHub).
+      Pour le créer : GitHub → photo de profil → <b>Settings</b> → <b>Developer settings</b> →
+      <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.
+      Donne-lui accès uniquement à ce dépôt, avec la permission <b>Contents: Read and write</b>.
+    </p>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="connect()">Se connecter</button>
+    </div>
+  </section>
+
+  <!-- App principale -->
+  <div id="app" class="hidden">
+    <div class="topbar">
+      <h3 id="repo-label">dépôt</h3>
+      <button class="btn-ghost" style="font-size:12px;padding:6px 10px" onclick="disconnect()">Changer de dépôt</button>
+    </div>
+
+    <div id="watch-list"></div>
+
+    <button class="add-btn" style="width:100%" onclick="openEditor(null)">+ Nouvelle recherche</button>
+  </div>
+
+</main>
+
+<div id="status"></div>
+
+<script>
+const CONFIG_PATH = "config.json";
+let session = null;   // { owner, repo, token }
+let config = null;    // objet config.json
+let sha = null;        // sha du fichier pour pouvoir le mettre à jour
+let editingIndex = null;
+
+function showStatus(msg, ok=true){
+  const el = document.getElementById("status");
+  el.textContent = msg;
+  el.className = (ok ? "ok" : "err") + " show";
+  setTimeout(()=> el.classList.remove("show"), 3000);
+}
+
+function apiHeaders(){
+  return {
+    "Authorization": "Bearer " + session.token,
+    "Accept": "application/vnd.github+json",
+  };
+}
+
+function b64EncodeUnicode(str){
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+function b64DecodeUnicode(b64){
+  const binary = atob(b64.replace(/\n/g, ""));
+  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+async function connect(){
+  const owner = document.getElementById("gh-owner").value.trim();
+  const repo = document.getElementById("gh-repo").value.trim();
+  const token = document.getElementById("gh-token").value.trim();
+  if(!owner || !repo || !token){ showStatus("Remplis les 3 champs", false); return; }
+
+  session = { owner, repo, token };
+  try{
+    await loadConfig();
+    localStorage.setItem("vinted-bot-session", JSON.stringify(session));
+    document.getElementById("setup").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    document.getElementById("repo-label").textContent = owner + "/" + repo;
+    renderList();
+  }catch(e){
+    showStatus("Connexion impossible : " + e.message, false);
+  }
+}
+
+function disconnect(){
+  localStorage.removeItem("vinted-bot-session");
+  location.reload();
+}
+
+async function loadConfig(){
+  const url = `https://api.github.com/repos/${session.owner}/${session.repo}/contents/${CONFIG_PATH}`;
+  const res = await fetch(url, { headers: apiHeaders() });
+  if(!res.ok) throw new Error("config.json introuvable (vérifie le nom du dépôt et le token)");
+  const data = await res.json();
+  sha = data.sha;
+  config = JSON.parse(b64DecodeUnicode(data.content));
+  if(!config.watches) config.watches = [];
+}
+
+async function saveConfig(){
+  const url = `https://api.github.com/repos/${session.owner}/${session.repo}/contents/${CONFIG_PATH}`;
+  const body = {
+    message: "update config via interface web",
+    content: b64EncodeUnicode(JSON.stringify(config, null, 2)),
+    sha: sha,
+  };
+  const res = await fetch(url, { method: "PUT", headers: {...apiHeaders(), "Content-Type":"application/json"}, body: JSON.stringify(body) });
+  if(!res.ok){
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err.message || "échec de l'enregistrement");
+  }
+  const data = await res.json();
+  sha = data.content.sha;
+}
+
+function renderList(){
+  const list = document.getElementById("watch-list");
+  list.innerHTML = "";
+  if(config.watches.length === 0){
+    list.innerHTML = `<div class="empty"><div class="big">📡</div>Aucune recherche pour l'instant.<br>Ajoute-en une pour lancer le scan.</div>`;
+    return;
+  }
+  config.watches.forEach((w, i) => {
+    const el = document.createElement("div");
+    el.className = "watch";
+    const maxPrice = w.max_price ?? "—";
+    el.innerHTML = `
+      <div class="watch-top">
+        <div>
+          <div class="watch-name">${escapeHtml(w.name || "(sans nom)")}</div>
+          <div class="watch-meta">
+            <span class="badge">≤ ${maxPrice}€</span>
+            ${w.sort_by_popularity ? '<span class="badge">tri popularité</span>' : ''}
+          </div>
+        </div>
+        <div class="watch-actions">
+          <button class="icon-btn" onclick="openEditor(${i})" title="Modifier">✎</button>
+          <button class="icon-btn" onclick="deleteWatch(${i})" title="Supprimer">✕</button>
+        </div>
+      </div>
+      <div id="editor-${i}"></div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function blankWatch(){
+  return {
+    name: "",
+    params: { search_text: "", price_to: "", currency: "EUR", order: "newest_first" },
+    min_price: 0,
+    max_price: 30,
+    keywords_include: [],
+    keywords_exclude: [],
+    sort_by_popularity: true,
+    min_favourites: 0
+  };
+}
+
+function openEditor(index){
+  editingIndex = index;
+  const isNew = index === null;
+  const w = isNew ? blankWatch() : config.watches[index];
+
+  // ferme les autres éditeurs ouverts
+  document.querySelectorAll('[id^="editor-"]').forEach(e => e.innerHTML = "");
+
+  const html = `
+    <div class="editor">
+      <label>Nom de la recherche</label>
+      <input type="text" id="f-name" value="${escapeHtml(w.name)}" placeholder="ex : Carhartt WIP taille M" />
+
+      <label>Mots-clés de recherche (comme dans la barre Vinted)</label>
+      <input type="text" id="f-search" value="${escapeHtml(w.params.search_text || "")}" placeholder="ex : carhartt wip veste" />
+
+      <div class="row2">
+        <div>
+          <label>Prix max (€)</label>
+          <input type="number" id="f-price" value="${w.max_price ?? ""}" placeholder="30" />
+        </div>
+        <div>
+          <label>Favoris min (optionnel)</label>
+          <input type="number" id="f-fav" value="${w.min_favourites ?? 0}" placeholder="0" />
+        </div>
+      </div>
+
+      <label>Mots à exclure (séparés par une virgule)</label>
+      <input type="text" id="f-exclude" value="${escapeHtml((w.keywords_exclude||[]).join(", "))}" placeholder="enfant, replica, custom" />
+
+      <div class="checkline">
+        <input type="checkbox" id="f-pop" ${w.sort_by_popularity ? "checked" : ""} />
+        <span>Prioriser les articles les plus favorisés (tendance)</span>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="submitWatch(${isNew ? "null" : index})">Enregistrer</button>
+        <button class="btn-ghost" onclick="renderList()">Annuler</button>
+      </div>
+    </div>
+  `;
+
+  if(isNew){
+    // affiche un formulaire flottant en haut de la liste
+    const container = document.createElement("div");
+    container.className = "watch";
+    container.id = "new-watch-form";
+    container.innerHTML = `<div class="watch-name">Nouvelle recherche</div>` + html;
+    document.getElementById("watch-list").prepend(container);
+  } else {
+    document.getElementById(`editor-${index}`).innerHTML = html;
+  }
+}
+
+async function submitWatch(index){
+  const name = document.getElementById("f-name").value.trim();
+  const search = document.getElementById("f-search").value.trim();
+  const price = parseFloat(document.getElementById("f-price").value) || 0;
+  const fav = parseInt(document.getElementById("f-fav").value) || 0;
+  const exclude = document.getElementById("f-exclude").value.split(",").map(s=>s.trim()).filter(Boolean);
+  const pop = document.getElementById("f-pop").checked;
+
+  if(!name || !search){ showStatus("Nom et mots-clés obligatoires", false); return; }
+
+  const watch = {
+    name,
+    params: { search_text: search, price_to: String(price), currency: "EUR", order: "newest_first" },
+    min_price: 0,
+    max_price: price,
+    keywords_include: [],
+    keywords_exclude: exclude,
+    sort_by_popularity: pop,
+    min_favourites: fav
+  };
+
+  if(index === null){
+    config.watches.push(watch);
+  } else {
+    config.watches[index] = watch;
+  }
+
+  document.getElementById("new-watch-form")?.remove();
+
+  try{
+    await saveConfig();
+    showStatus("Enregistré ✓ — actif au prochain scan (max 10 min)");
+    renderList();
+  }catch(e){
+    showStatus("Erreur : " + e.message, false);
+  }
+}
+
+async function deleteWatch(index){
+  if(!confirm("Supprimer cette recherche ?")) return;
+  config.watches.splice(index, 1);
+  try{
+    await saveConfig();
+    showStatus("Supprimé ✓");
+    renderList();
+  }catch(e){
+    showStatus("Erreur : " + e.message, false);
+  }
+}
+
+// auto-connect si une session est déjà enregistrée
+(function init(){
+  const saved = localStorage.getItem("vinted-bot-session");
+  if(saved){
+    session = JSON.parse(saved);
+    loadConfig().then(()=>{
+      document.getElementById("setup").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      document.getElementById("repo-label").textContent = session.owner + "/" + session.repo;
+      renderList();
+    }).catch(e => {
+      showStatus("Session expirée, reconnecte-toi : " + e.message, false);
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "base_url": "https://www.vinted.fr",
+  "poll_interval_seconds": 420,
+  "watches": [
+    {
+      "name": "Carhartt WIP - taille M - pas cher",
+      "params": {
+        "search_text": "carhartt wip veste",
+        "price_to": "40",
+        "currency": "EUR",
+        "order": "newest_first",
+        "size_ids": "",
+        "brand_ids": "",
+        "catalog_ids": ""
+      },
+      "min_price": 0,
+      "max_price": 40,
+      "keywords_include": [],
+      "keywords_exclude": ["enfant", "kids", "reproduction", "replica"],
+      "sort_by_popularity": true,
+      "min_favourites": 0
+    },
+    {
+      "name": "Cartes Pokemon EV - lot sous-cote",
+      "params": {
+        "search_text": "carte pokemon ev",
+        "price_to": "15",
+        "currency": "EUR",
+        "order": "newest_first",
+        "catalog_ids": ""
+      },
+      "min_price": 0,
+      "max_price": 15,
+      "keywords_include": [],
+      "keywords_exclude": ["proxy", "fake", "custom"],
+      "sort_by_popularity": true,
+      "min_favourites": 0
+    }
+  ]
+}
