@@ -20,7 +20,7 @@
     {
       "name": "Pokemon",
       "params": {
-        "search_text": "Carte Pokemon",
+        "search_text": "Carte Pokemon full art",
         "price_to": "5",
         "currency": "EUR",
         "order": "newest_first"
