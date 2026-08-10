@@ -1,5 +1,21 @@
 {
   "base_url": "https://www.vinted.fr",
   "poll_interval_seconds": 420,
-  "watches": []
+  "watches": [
+    {
+      "name": "short venum",
+      "params": {
+        "search_text": "short venue",
+        "price_to": "30",
+        "currency": "EUR",
+        "order": "newest_first"
+      },
+      "min_price": 0,
+      "max_price": 30,
+      "keywords_include": [],
+      "keywords_exclude": [],
+      "sort_by_popularity": true,
+      "min_favourites": 0
+    }
+  ]
 }
