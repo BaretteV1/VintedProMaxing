@@ -76,6 +76,21 @@
       "keywords_exclude": [],
       "sort_by_popularity": true,
       "min_favourites": 0
+    },
+    {
+      "name": "Pokemon",
+      "params": {
+        "search_text": "Dracaufeu",
+        "price_to": "10",
+        "currency": "EUR",
+        "order": "newest_first"
+      },
+      "min_price": 0,
+      "max_price": 10,
+      "keywords_include": [],
+      "keywords_exclude": [],
+      "sort_by_popularity": true,
+      "min_favourites": 0
     }
   ]
 }
