@@ -51,8 +51,9 @@ def load_seen() -> set:
 
 
 def save_seen(seen: set) -> None:
-    # on garde uniquement les 5000 derniers ids pour ne pas grossir indéfiniment
-    trimmed = list(seen)[-5000:]
+    # on garde les 20000 derniers ids pour ne pas grossir indéfiniment
+    # (plus élevé qu'avant car chaque recherche a maintenant sa propre mémoire)
+    trimmed = list(seen)[-20000:]
     SEEN_PATH.write_text(json.dumps(trimmed), encoding="utf-8")
 
 
@@ -70,6 +71,8 @@ def passes_filters(item, watch: dict) -> bool:
 
     title = (getattr(item, "title", "") or "").lower()
 
+    # Vinted ne filtre pas toujours fidèlement côté serveur : on revérifie
+    # nous-mêmes que le titre contient bien les mots de la recherche.
     include_kws = watch.get("keywords_include") or []
     if not include_kws:
         include_kws = [w for w in watch["params"].get("search_text", "").split() if len(w) > 2]
@@ -80,6 +83,7 @@ def passes_filters(item, watch: dict) -> bool:
     for kw in watch.get("keywords_exclude", []):
         if kw.lower() in title:
             return False
+
     min_fav = watch.get("min_favourites")
     if min_fav:
         fav_count = getattr(item, "favourite_count", None)
@@ -144,7 +148,10 @@ def run_once(config: dict, scraper: VintedScraper, seen: set) -> int:
         items = sort_by_popularity(items, watch)
 
         for item in items:
-            item_id = str(getattr(item, "id", None) or getattr(item, "url", None))
+            raw_id = str(getattr(item, "id", None) or getattr(item, "url", None))
+            # clé propre à CETTE recherche : une même annonce peut légitimement
+            # matcher plusieurs recherches sans se "voler" mutuellement leurs alertes
+            item_id = f"{watch['name']}::{raw_id}"
             if item_id in seen:
                 continue
             seen.add(item_id)
