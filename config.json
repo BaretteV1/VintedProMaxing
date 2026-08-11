@@ -33,7 +33,12 @@
       "min_price": 0,
       "max_price": 15,
       "keywords_include": [],
-      "keywords_exclude": [],
+      "keywords_exclude": [
+        "tache",
+        "trou",
+        "fake",
+        "à réparer"
+      ],
       "sort_by_popularity": true,
       "min_favourites": 0
     },
